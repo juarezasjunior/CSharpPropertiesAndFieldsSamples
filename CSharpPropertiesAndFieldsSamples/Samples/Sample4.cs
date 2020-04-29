@@ -38,7 +38,7 @@ namespace CSharpPropertiesAndFieldsSamples.Samples
 
             set
             {
-                if (value <= 21)
+                if (value < 21)
                 {
                     throw new Exception("You cannot add a person that are not 21 years old or more.");
                 }

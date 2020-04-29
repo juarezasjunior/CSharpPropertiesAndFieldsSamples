@@ -136,4 +136,78 @@ Com isso, podemos ter campos, mas decidir quais serão expostos e quais poderão
 Mas, será que sempre precisamos ter um campo e uma propriedade?
 
 ## Exemplo 5 - Propriedades sem campos definidos explicitamente
-Na pasta Samples dessa solução, temos o arquivo Sample4.cs.
+Na pasta Samples dessa solução, temos o arquivo Sample5.cs.
+Se desejarmos simplificar, podemos criar apenas propriedades sem criar os campos.
+Internamente, ele terá criado os campos, mas você não os visualizará nem acessará eles diretamente, apenas usando as propriedades.
+Assim, conforme o código abaixo, podemos simplesmente ter propriedades.
+```
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Address { get; set; }
+```
+Note que nem sempre precisamos colocar {} no get e no set. Se você não deseja colocar validações ou mudar o jeito padrão, basta colocar get;set;. Se desejar, poderá colocar também apenas get ou apenas set.
+
+
+## Exemplo 6 - Propriedades com private set
+Na pasta Samples dessa solução, temos o arquivo Sample6.cs.
+Quando criamos propriedades, podemos definir como private o set. Dessa forma, internamente, na própria classe, eu posso atribuir o valor daquela propriedade, mas fora da classe, consigo apenas pegar o valor.
+Veja o código abaixo:
+```
+    public class Sample6
+    {
+        public int Id { get; private set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Address { get; private set; }
+
+        public Sample6(int id, string name, int age, string address)
+        {
+            this.Id = id;
+            this.Name = name;
+            this.Age = age;
+            this.Address = address;
+        }
+
+        public void ChangeId(int newId)
+        {
+            this.Id = newId;
+        }
+    }
+```
+As propriedades Id e Address não podem receber valores fora da classe, apenas internamente (como no construtor ou em outros métodos). Você pode criar um método para alterar a propriedade mas não pode alterar ela de fora.
+Veja uma outra classe chamando a Sample6.
+```
+    public class UsingSample6
+    {
+        public void Using()
+        {
+            Sample6 sample6 = new Sample6(1, "John", 20, "20th street");
+
+            sample6.Name = "Mary";
+
+            //You cannot set a value for Id property, because the setter is private
+            //Only the class can set its value
+            //Uncomment the following line and you will see the error
+
+            //sample6.Id = 15;
+        }
+    }
+```
+No exemplo acima, se descomentar a linha sample6.Id = 15, note que você receberá um erro.
+
+## Exemplo 7 - Mais exemplos de propriedades
+Na pasta Samples dessa solução, temos o arquivo Sample7.cs.
+Nesse exemplo, podemos atribuir valores padrões para as propriedades de algumas maneiras.
+```
+        public int Id => 10;
+        public string Name { get; set; } = "John";
+        public int Age { get; private set; } = 21;
+        public string Address { get; } = "20th avenue";
+```
+Note que na primeira propriedade, `public int Id => 10;` estamos atribuindo o valor 10 à propriedade Id. Porém, nesse layout, eu não posso atribuir à propriedade Id um outro valor, porque é como se ele tivesse criado ela apenas com o get, sem o set.
+Na segunda, temos o get e o set, porém já atribuimos um valor padrão de "John".
+Na terceira, temos o get e o private set (onde pode ser modificado o valor dela apenas na própria classe que a criou). Também
+já atribuimos para ela um valor padrão, 21.
+Na quarta, temos também apenas o get e já passamos um valor padrão.
+
